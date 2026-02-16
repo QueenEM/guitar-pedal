@@ -14,17 +14,18 @@ A digital guitar effects pedal built with a Raspberry Pi 4 and an Electrosmith D
 ### Implemented
 - **Idle Screen** - Animated waveform display with floating particles and pulsing title
 - **Touch Menu** - Scrollable menu with tap selection
+- **Effects** - Five audio effects (Overdrive, Fuzz, Chorus, Delay, Reverb) with per-effect parameter sliders and enable/disable toggle
+- **Effect Chain** - Reorderable effect processing pipeline with drag-to-reorder UI
+- **Tuner** - Built-in chromatic guitar tuner with real-time pitch detection
+- **Presets** - Browse and apply factory presets (Rock, Metal, Hip-Hop), save/load/delete custom user presets with on-screen keyboard, persisted to disk as JSON
 - **Spotify Integration** - Now playing screen with album art, track info, progress bar, and playback controls (play/pause, skip, previous)
 - **Visualiser** - Split-screen oscilloscope showing input signal (blue) and effect chain output (green) as real-time waveforms
 - **Mock Signal** - 440Hz sine wave generator for testing without Daisy hardware
-- **Effect Chain** - Passthrough skeleton that effects will plug into
 - **Auto-start** - App launches automatically on boot
 
 ### Planned
-- **Effects** - Select and configure individual effects (overdrive, delay, reverb, chorus, fuzz)
-- **Tuner** - Built-in chromatic guitar tuner
-- **Presets** - Save and load effect configurations
-- **MIDI Support** - Control effects via MIDI foot controller
+- **Daisy DSP** - Real-time audio processing on the Electrosmith Daisy
+- **Serial Communication** - Pi <-> Daisy parameter sync
 
 ## Project Structure
 
@@ -37,17 +38,26 @@ guitar-pedal/
 │   ├── ui/
 │   │   ├── idle_screen.py       # Idle waveform animation
 │   │   ├── menu.py              # Main menu with touch support
+│   │   ├── effects_screen.py    # Effect parameter editor with sliders
+│   │   ├── effect_chain_screen.py # Effect chain reorder screen
+│   │   ├── presets_screen.py    # Preset browser, save, and delete
+│   │   ├── tuner.py             # Chromatic guitar tuner
 │   │   ├── spotify_screen.py    # Spotify now playing screen
-│   │   ├── visualiser.py        # Split-screen signal oscilloscope
-│   │   ├── tuner.py             # Tuner display (planned)
-│   │   └── parameter_control.py # Effect parameter UI (planned)
+│   │   └── visualiser.py        # Split-screen signal oscilloscope
 │   ├── effects/
 │   │   ├── effect_chain.py      # Ordered effect processing pipeline
-│   │   └── presets.py           # Preset save/load (planned)
+│   │   ├── overdrive.py         # Overdrive effect
+│   │   ├── fuzz.py              # Fuzz effect
+│   │   ├── chorus.py            # Chorus effect
+│   │   ├── delay.py             # Delay effect
+│   │   ├── reverb.py            # Reverb effect
+│   │   └── presets.py           # Preset data layer and persistence
 │   ├── comms/
 │   │   ├── spotify_client.py    # Spotify API client
 │   │   ├── mock_signal.py       # Fake signal source for testing
 │   │   └── serial_comms.py      # Pi <-> Daisy communication (planned)
+│   ├── data/
+│   │   └── user_presets.json    # User-saved presets (auto-created)
 │   └── assets/                  # Animations, icons, fonts
 ├── daisy/                       # C++ - Electrosmith Daisy DSP
 │   ├── src/
@@ -60,7 +70,6 @@ guitar-pedal/
 │   │   │   ├── fuzz.cpp/h
 │   │   │   └── effect_chain.cpp/h
 │   │   ├── tuner/               # Pitch detection (planned)
-│   │   ├── midi/                # MIDI handler (planned)
 │   │   └── comms/               # Serial comms to Pi (planned)
 │   ├── lib/                     # Daisy libraries
 │   └── Makefile
